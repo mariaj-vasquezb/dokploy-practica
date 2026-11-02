@@ -7,7 +7,7 @@ const app = express();
 const version = process.env.APP_VERSION || '1.0.0';
 
 app.get('/', (req, res) => res.json({
-  mensaje: 'Aplicación desplegada con Dokploy',
+  mensaje: 'Actualización automática con Dokploy versión 2',
   version,
   nombre: 'María José Vásquez Beltrán',
   codigo: '1092456048',
