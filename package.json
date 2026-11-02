@@ -1,0 +1,17 @@
+{
+  "name": "dokploy-practica-maria",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "mysql2": "^3.14.0",
+    "pg": "^8.16.0",
+    "redis": "^4.7.0"
+  }
+}
