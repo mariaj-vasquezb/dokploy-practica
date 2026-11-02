@@ -1,0 +1,72 @@
+services:
+  app:
+    build: .
+    ports:
+      - "3001:3000"
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      APP_VERSION: compose-1.0.0
+      DB_HOST: db-service
+      DB_PORT: "3306"
+      DB_NAME: compose_db
+      DB_USER: admin_compose
+      DB_PASSWORD: ${MYSQL_APP_PASSWORD:?Configura MYSQL_APP_PASSWORD}
+    depends_on:
+      db-service:
+        condition: service_healthy
+    networks:
+      - compose-net
+    restart: unless-stopped
+
+  mongodb:
+    image: mongo:7
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin_compose
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:?Configura MONGO_PASSWORD}
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - compose-net
+    restart: unless-stopped
+
+  phpmyadmin:
+    image: phpmyadmin:5
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db-service
+      PMA_PORT: "3306"
+    depends_on:
+      db-service:
+        condition: service_healthy
+    networks:
+      - compose-net
+    restart: unless-stopped
+
+  db-service:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Configura MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: compose_db
+      MYSQL_USER: admin_compose
+      MYSQL_PASSWORD: ${MYSQL_APP_PASSWORD:?Configura MYSQL_APP_PASSWORD}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    networks:
+      - compose-net
+    restart: unless-stopped
+
+volumes:
+  mongo-data:
+  mysql-data:
+
+networks:
+  compose-net:
+    driver: bridge
