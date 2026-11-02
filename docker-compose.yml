@@ -20,12 +20,12 @@ services:
     restart: unless-stopped
 
   mongodb:
-    image: mongo:7
+    image: mongo:4.4
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin_compose
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:?Configura MONGO_PASSWORD}
     volumes:
-      - mongo-data:/data/db
+      - mongo44-data:/data/db
     networks:
       - compose-net
     restart: unless-stopped
@@ -64,7 +64,7 @@ services:
     restart: unless-stopped
 
 volumes:
-  mongo-data:
+  mongo44-data:
   mysql-data:
 
 networks:
